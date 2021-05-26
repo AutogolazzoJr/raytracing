@@ -1,5 +1,6 @@
 #ifdef GL_ES
-precision lowp float;
+precision mediump float;
+precision mediump int;
 #endif
 
 #define DEPTH 4
@@ -8,6 +9,8 @@ precision lowp float;
 #define MAX_VALUE 3.402823466E+38
 #define PI 3.141592653589793
 
+uniform vec3 iResolution;
+uniform float iTime;
 uniform int numSamples;
 uniform bool drawNormals;
 uniform bool useNormalMaps;
@@ -206,11 +209,11 @@ vec3 trace(vec3 ray) {
 	return final;
 }
 
-void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+void main() {
     float range = fovLength;
 	float aspect = iResolution.y / iResolution.x;
-	float x = map(0., iResolution.x, -range, range, fragCoord.x);
-	float y = map(0., iResolution.y, -range * aspect, range * aspect, fragCoord.y);
+	float x = map(0., iResolution.x, -range, range, gl_FragCoord.x);
+	float y = map(0., iResolution.y, -range * aspect, range * aspect, gl_FragCoord.y);
 	float z = -1.;
 	float theta;
 	float phi;
@@ -234,5 +237,5 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 		color += result;
 	}
 	color /= numSamples;
-	fragColor = vec4(color, 1.);
+	gl_FragColor = vec4(color, 1.);
 }

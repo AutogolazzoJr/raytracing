@@ -1,6 +1,6 @@
 import java.util.*;
 
-String fileName = "normal.config";
+String fileName = "normal2.config";
 int numSamples = 10;
 
 PShader shader;
