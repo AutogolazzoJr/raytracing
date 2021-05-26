@@ -42,7 +42,7 @@ void setup() {
    shader.set("iResolution", float(width), float(height), 0.0);
 
    try {
-      scanner = new Scanner(new File("C:/Users/Ethan/Documents/raytracing/normal.config"));
+      scanner = new Scanner(new File(sketchPath() + "/normal.config"));
    }
    catch (Exception e) {
       e.printStackTrace();
