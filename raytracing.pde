@@ -1,16 +1,16 @@
 import java.util.*;
 
+String fileName = "normal.config";
+int numSamples = 10;
+
 PShader shader;
-
-// uniform float     iChannelTime[4];       // channel playback time (in seconds)
-// uniform vec3      iChannelResolution[4]; // channel resolution (in pixels)
-
-// uniform samplerXX iChannel0..3;          // input channel. XX = 2D/Cube
 
 float previousTime = 0.0;
 
 boolean mouseDragged = false;
 boolean combineSamples = false;
+boolean drawNormals = false;
+boolean useNormalMaps = true;
 
 PVector lastMousePosition;
 float mouseClickState = 0.0;
@@ -24,9 +24,6 @@ float[] cameraRotation = {0, 0};
 float[] cameraStartRotation = {0, 0};
 
 int sampleNum = 0;
-int numSamples = 10;
-boolean drawNormals = false;
-boolean useNormalMaps = true;
 
 int[] prev = new int[width * height * 3];
 
@@ -42,7 +39,7 @@ void setup() {
    shader.set("iResolution", float(width), float(height), 0.0);
 
    try {
-      scanner = new Scanner(new File(sketchPath() + "/normal.config"));
+      scanner = new Scanner(new File(sketchPath() + "/" + fileName));
    }
    catch (Exception e) {
       e.printStackTrace();
