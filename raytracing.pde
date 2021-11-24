@@ -1,6 +1,6 @@
 import java.util.*;
 
-String fileName = "normal2.config";
+String fileName = "assets/normal.config";
 int numSamples = 10;
 
 PShader shader;
@@ -267,13 +267,13 @@ void addMaterial() {
       }
       String textures = scanner.nextLine().trim().split(":")[1].trim();
       if (textures.contains("color")) {
-         setTexture(scanner.nextLine().trim().split(":")[1].trim(), textureLocIndex + 0);
+         setTexture("assets/" + scanner.nextLine().trim().split(":")[1].trim(), textureLocIndex + 0);
       }
       if (textures.contains("normal")) {
-         setTexture(scanner.nextLine().trim().split(":")[1].trim(), textureLocIndex + 1);
+         setTexture("assets/" + scanner.nextLine().trim().split(":")[1].trim(), textureLocIndex + 1);
       }
       if (textures.contains("specular")) {
-         setTexture(scanner.nextLine().trim().split(":")[1].trim(), textureLocIndex + 2);
+         setTexture("assets/" + scanner.nextLine().trim().split(":")[1].trim(), textureLocIndex + 2);
       }
    }
 }
