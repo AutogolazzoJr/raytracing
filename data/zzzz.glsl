@@ -255,6 +255,7 @@ tValue rayPolygon(vec3 ray, vec3 rayOrigin, vec3 planeNorm, vec3 planeP, vec3 po
 		vec3 line = standardForm(pointOne, pointTwo);
 		if (lineVal(line, planePoint) * lineVal(line, testPoint) < 0) { //TODO: tolerance
 			working = false;
+			break;
 		}
 	}
 	if (working) {
