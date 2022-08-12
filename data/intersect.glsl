@@ -1,6 +1,6 @@
 tValue raySphere(vec3 ray, vec3 rayOrigin, vec4 sphere) {
     tValue tv;
-    tv.success = false;
+    tv.t = -1.;
 	sphere = vec4(sphere.xyz - rayOrigin, sphere.w);
 	vec3 loc = sphere.xyz;
 	float a = dot(ray, ray);
@@ -18,7 +18,6 @@ tValue raySphere(vec3 ray, vec3 rayOrigin, vec4 sphere) {
 			}
 			tv.normal = ray * t2 - sphere.xyz;
             tv.t = t2;
-            tv.success = true;
 			return tv;
 		} else if (t2 <= tol) {
 			if (t1 <= tol) {
@@ -26,20 +25,18 @@ tValue raySphere(vec3 ray, vec3 rayOrigin, vec4 sphere) {
 			}
 			tv.normal = ray * t1 - sphere.xyz;
             tv.t = t1;
-            tv.success = true;
 			return tv;
 		}
 		float t3 = min(t1, t2);
 		tv.normal = ray * t3 - sphere.xyz;
         tv.t = t3;
-        tv.success = true;
 		return tv;
 	}
 }
 
 tValue rayPlane(vec3 ray, vec3 rayOrigin, vec3 planeNorm, vec3 planeP) {
     tValue tv;
-    tv.success = false;
+    tv.t = -1.;
 	planeP = planeP - rayOrigin;
 	float t = dot(planeNorm, planeP) / dot(planeNorm, ray);
 	if (t <= tol) {
@@ -49,14 +46,13 @@ tValue rayPlane(vec3 ray, vec3 rayOrigin, vec3 planeNorm, vec3 planeP) {
 		planeNorm *= -1.;
 	tv.normal = planeNorm;
     tv.t = t;
-    tv.success = true;
 	return tv;
 }
 
 #define POLY_POINTS 4
 tValue rayPolygon(vec3 ray, vec3 rayOrigin, vec3 planeNorm, vec3 planeP, vec3 polyPoints[POLY_POINTS]) {
 	tValue plane = rayPlane(ray, rayOrigin, planeNorm, planeP);
-	if (!plane.success) {
+	if (plane.t < 0.) {
 		return plane;
 	}
 	vec3 testPoint3d = rayOrigin + ray * plane.t;
@@ -114,13 +110,13 @@ tValue rayPolygon(vec3 ray, vec3 rayOrigin, vec3 planeNorm, vec3 planeP, vec3 po
 		return plane;
 	}
 	tValue failed;
-	failed.success = false;
+	failed.t = -1.;
 	return failed;
 }
 
 tValue rayCircle(vec3 ray, vec3 rayOrigin, vec3 planeNorm, vec3 planeP, float radius) {
     tValue tv;
-    tv.success = false;
+    tv.t = -1.;
 	planeP = planeP - rayOrigin;
 	float t = dot(planeNorm, planeP) / dot(planeNorm, ray);
 	if (t <= tol || sqrt(dot((planeP - ray * t) * (planeP - ray * t), vec3(1.))) > radius) {
@@ -130,6 +126,5 @@ tValue rayCircle(vec3 ray, vec3 rayOrigin, vec3 planeNorm, vec3 planeP, float ra
 		planeNorm *= -1.;
     tv.normal = planeNorm;
     tv.t = t;
-	tv.success = true;
 	return tv;
 }

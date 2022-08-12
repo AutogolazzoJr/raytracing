@@ -34,7 +34,6 @@ struct incoming {
 
 struct tValue {
     float t;
-    bool success;
     vec3 normal;
 	vec2 texCoord;
 	vec3 basis1;
@@ -90,7 +89,7 @@ intersectedRay rayIntersect(vec3 ray, vec3 rayOrigin) {
 			planePoint3d /= 4;
 			intersect = rayPolygon(ray, rayOrigin, normal, planePoint3d, quadPoints);
 		}
-		if (intersect.success && intersect.t < t) {
+		if (intersect.t > 0. && intersect.t < t) {
 			t = intersect.t;
 			r.normal = intersect.normal;
 			r.texCoord = intersect.texCoord;
