@@ -1,37 +1,24 @@
-tValue raySphere(vec3 ray, vec3 rayOrigin, vec4 sphere) {
+tValue raySphere(vec3 ray, vec3 rayOrigin, vec4 sphereData) {
     tValue tv;
     tv.t = -1.;
-	sphere = vec4(sphere.xyz - rayOrigin, sphere.w);
-	vec3 loc = sphere.xyz;
-	float a = dot(ray, ray);
-	float b = -2. * dot(loc, ray);
-	float c = dot(loc, loc) - sphere.w * sphere.w;
-	float desc = b * b - 4. * a * c;
-	if (desc < 0.)
-		return tv;
-	else {
-		float t1 = (-b + sqrt(desc)) / (2. * a);
-		float t2 = (-b - sqrt(desc)) / (2. * a);
-		if (t1 <= tol) {
-			if (t2 <= tol) {
-				return tv;
-			}
-			tv.normal = ray * t2 - sphere.xyz;
-            tv.t = t2;
-			return tv;
-		} else if (t2 <= tol) {
-			if (t1 <= tol) {
-				return tv;
-			}
-			tv.normal = ray * t1 - sphere.xyz;
-            tv.t = t1;
-			return tv;
-		}
-		float t3 = min(t1, t2);
-		tv.normal = ray * t3 - sphere.xyz;
-        tv.t = t3;
-		return tv;
-	}
+	vec3 sphere = sphereData.xyz - rayOrigin;
+	float radius = sphereData.w;
+    
+    float a = dot(ray, ray);
+    float h = -dot(ray, sphere);
+    float c = dot(sphere, sphere) - radius * radius;
+    
+    float desc = h * h - a * c;
+    if (desc < 0.)
+        return tv;
+    
+    desc = sqrt(desc);
+    float t1 = -h + desc;
+    float t2 = -h - desc;
+    float t = min(t1, t2) / a;
+    tv.normal = normalize(t * ray - sphere);
+	tv.t = t;
+	return tv;
 }
 
 tValue rayPlane(vec3 ray, vec3 rayOrigin, vec3 planeNorm, vec3 planeP) {
