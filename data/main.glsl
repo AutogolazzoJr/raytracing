@@ -198,12 +198,12 @@ void main() {
 	float phi;
 	theta = cameraRotation.x;
 	phi = cameraRotation.y;
-	float x1 = x * cos(theta) - z * sin(theta);
-	z = x * sin(theta) + z * cos(theta);
-	x = x1;
 	float y1 = y * cos(phi) - z * sin(phi);
 	z = y * sin(phi) + z * cos(phi);
 	y = y1;
+	float x1 = x * cos(theta) - z * sin(theta);
+	z = x * sin(theta) + z * cos(theta);
+	x = x1;
 	vec3 ray = vec3(x, y, z);
 	vec3 color = vec3(0.);
 	/*if (drawNormals) {
