@@ -118,12 +118,6 @@ vec3 trace(vec3 ray) {
             final = vec3(data[b++], data[b++], data[b++]);
         } else {
             origin = intersect.point;
-			/*if (drawNormals) {
-				return (intersect.normal + 1.) * .5;
-				//return vec3(abs(intersect.texCoord.x), 0., 0.);
-				//return vec3(0., abs(intersect.texCoord.y), 0.);
-				//return vec3(abs(intersect.texCoord), 0.);
-			}*/
             if (intersect.id == 2 && randomFloat(50.) < data[b + 3]) {
                 intersect.id = 1;
             }
@@ -151,20 +145,9 @@ vec3 trace(vec3 ray) {
 						//norm.x = -norm.x;
 						intersect.normal = normalize(norm.x * intersect.basis1 + norm.y * intersect.basis2 + norm.z * intersect.normal);
 					}
-					//float temp = norm.x;
-					//norm.x = norm.y;
-					//norm.y = -temp;
-					//intersect.normal = normalize(vec3(dot(intersect.basis1, norm), dot(intersect.basis2, norm), dot(oldNorm, norm)));
-					//intersect.normal = normalize(vec3(intersect.basis1.x * norm.x + intersect.basis2.x * norm.y + oldNorm.x * norm.z, intersect.basis1.y * norm.x + intersect.basis2.y * norm.y + oldNorm.y * norm.z, intersect.basis1.z * norm.x + intersect.basis2.z * norm.y + oldNorm.z * norm.z));
-					//intersect.normal = normalize(intersect.basis2);
-					//if(dot(ray, intersect.normal) < 0.) {
-					//	intersect.normal *= -1.;
-					//}
 					if(dot(ray, intersect.normal) < 0.) {
 						ray *= -1.;
 					}
-					//intersect.normal = -oldNorm;
-					//intersect.normal = norm;
 				}
 				if (data[b] != -1.) {
 					angles[d].reflectance = textureAt(int(data[b]), intersect.texCoord.xy).xyz;
@@ -197,14 +180,11 @@ vec3 trace(vec3 ray) {
             depth = d;
         }
 	}
-	//*
-	for (int d = DEPTH - 1; d >= 0; d--) {
-		if (d <= depth) {
-			if (angles[d].angle != -10.) {
-				final = (angles[d].reflectance * BRDF * final * angles[d].angle / prob);
-			}
+	for (int d = depth; d >= 0; d--) {
+		if (angles[d].angle != -10.) {
+			final = (angles[d].reflectance * BRDF * final * angles[d].angle / prob);
 		}
-	}//*/
+	}
 	return final;
 }
 
