@@ -117,23 +117,30 @@ vec3 trace(vec3 ray) {
 		if (intersect.id == 0) {
             final = vec3(data[b++], data[b++], data[b++]);
         } else {
+			ray = normalize(ray); //make sure ray is normalized
             origin = intersect.point;
-            if (intersect.id == 2 && randomFloat(50.) < data[b + 3]) {
-                intersect.id = 1;
-            }
 			if (intersect.id == 3) {
-				intersect.id = 2;
-			}
-            if (intersect.id == 2) {
 				angles[d].reflectance = vec3(data[b++], data[b++], data[b++]);
                 ray = 2. * (dot(intersect.normal, ray)) * intersect.normal - ray;
                 if(dot(ray, intersect.normal) < 0.) {
                     ray *= -1.;
                 }
                 angles[d].angle = -10.;
+			}
+            if (intersect.id == 2) {
+				angles[d].reflectance = vec3(data[b++], data[b++], data[b++]);
+                ray = normalize(2. * (dot(intersect.normal, ray)) * intersect.normal - ray);
+				if(dot(ray, intersect.normal) < 0.) {
+                    ray *= -1.;
+                }
+				ray = mix(randomCosVector(intersect.normal), ray, data[b++]);
+                if(dot(ray, intersect.normal) < 0.) {
+					ray *= -1.;
+				}
+                angles[d].angle = -10.;//dot(ray, intersect.normal);
             } else if (intersect.id == 1) {
 				angles[d].reflectance = vec3(data[b++], data[b++], data[b++]);
-                ray = normalize(randomCosVector(intersect.normal));
+                ray = randomCosVector(intersect.normal);
                 float cos_theta = dot(ray, intersect.normal);
                 angles[d].angle = cos_theta;
             } else if (intersect.id == 4) {
@@ -183,6 +190,8 @@ vec3 trace(vec3 ray) {
 	for (int d = depth; d >= 0; d--) {
 		if (angles[d].angle != -10.) {
 			final = (angles[d].reflectance * BRDF * final * angles[d].angle / prob);
+		} else {
+			final = angles[d].reflectance * final;
 		}
 	}
 	return final;
